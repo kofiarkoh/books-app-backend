@@ -7,6 +7,7 @@ use App\Http\Requests\User\RegisterRequest;
 use App\Models\User;
 use App\Transformers\UserTransformer;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class RegisterUserController extends Controller
 {
@@ -23,6 +24,6 @@ class RegisterUserController extends Controller
             'data' => fractal()->item($user, new UserTransformer),
             "meta" => ['token' => $user->createToken($request->header('User-Agent'))->plainTextToken]
 
-        ]);
+        ], Response::HTTP_CREATED);
     }
 }
