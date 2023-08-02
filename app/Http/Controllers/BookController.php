@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\User\CreateOrUpdateBookRequest;
 use App\Models\Book;
 use App\Models\User;
+use App\Transformers\BookTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -38,7 +39,7 @@ class BookController extends Controller
 
         return response()->json([
             'message' => 'book information stored successfully',
-            'data' => $book
+            'data' => fractal()->item($book, new BookTransformer)
         ], Response::HTTP_CREATED);
     }
 
