@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\RegisterRequest;
 use App\Models\User;
+use App\Transformers\UserTransformer;
 use Illuminate\Http\Request;
 
 class RegisterUserController extends Controller
@@ -19,7 +20,7 @@ class RegisterUserController extends Controller
 
         return response()->json([
             'message' => 'user registered successfully',
-            'data' => $user
+            'data' => fractal()->item($user, new UserTransformer)
         ]);
     }
 }
