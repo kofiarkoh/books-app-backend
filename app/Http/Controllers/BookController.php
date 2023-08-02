@@ -62,9 +62,14 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Book $book)
+    public function update(CreateOrUpdateBookRequest $request, Book $book)
     {
-        //
+        $book->update($request->validated());
+
+        return response()->json([
+            'message' => 'book information updated successfully',
+            'data' => fractal()->item($book, new BookTransformer)
+        ], Response::HTTP_CREATED);
     }
 
     /**
