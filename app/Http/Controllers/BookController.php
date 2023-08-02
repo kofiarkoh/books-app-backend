@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\MultiFieldSearchFilter;
 use App\Http\Requests\User\CreateOrUpdateBookRequest;
 use App\Models\Book;
 use App\Models\User;
 use App\Transformers\BookTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use Spatie\QueryBuilder\QueryBuilder;
+use League\Fractal\Serializer\ArraySerializer as SerializerArraySerializer;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class BookController extends Controller
 {
@@ -16,7 +21,24 @@ class BookController extends Controller
      */
     public function index()
     {
-        //
+
+        /** @var User $user */
+        $user = auth()->user();
+
+        $paginated = QueryBuilder::for(Book::class)
+            ->allowedFilters([AllowedFilter::custom('q', new MultiFieldSearchFilter, 'title,description,author_name')])->where('user_id', $user->id)
+            ->paginate();
+
+        $res =  fractal()->collection($paginated, new BookTransformer)->serializeWith(new SerializerArraySerializer())
+            ->paginateWith(new IlluminatePaginatorAdapter($paginated))->toArray();
+
+        return response()->json([
+            'message' => 'books retrieved successfully',
+            'data' => $res['data'],
+            'meta' => $res['meta'],
+
+
+        ], Response::HTTP_OK);
     }
 
     /**
