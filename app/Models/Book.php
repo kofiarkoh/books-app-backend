@@ -39,6 +39,11 @@ class Book extends Model
 
     protected $guarded = ['id', 'uuid'];
 
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
