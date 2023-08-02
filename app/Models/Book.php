@@ -37,6 +37,8 @@ class Book extends Model
     use HasFactory, HasUuid;
 
 
+    protected $guarded = ['id', 'uuid'];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
