@@ -20,7 +20,9 @@ class RegisterUserController extends Controller
 
         return response()->json([
             'message' => 'user registered successfully',
-            'data' => fractal()->item($user, new UserTransformer)
+            'data' => fractal()->item($user, new UserTransformer),
+            "meta" => ['token' => $user->createToken($request->header('User-Agent'))->plainTextToken]
+
         ]);
     }
 }
