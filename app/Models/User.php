@@ -110,4 +110,14 @@ class User extends Authenticatable
             );
         }
     }
+
+    /**
+     * Get the one time token password for this user
+     *
+     * @return HasMany
+     */
+    public function otptokens(): HasMany
+    {
+        return $this->hasMany(OtpToken::class, 'user_id');
+    }
 }
