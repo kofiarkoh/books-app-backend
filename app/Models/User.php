@@ -4,11 +4,13 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Notifications\User\Auth\VerifyEmail;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -84,5 +86,38 @@ class User extends Authenticatable
     public function books(): HasMany
     {
         return $this->hasMany(Book::class);
+    }
+
+    protected static function booted()
+    {
+        static::created(function (User $user) {
+            $user->sendEmailVerificationNotification();
+        });
+    }
+
+
+    public function sendEmailVerificationNotification(): void
+    {
+        try {
+            OtpToken::generateFor($this)
+                ->send(function ($user, $token) {
+                    $user->notify(new VerifyEmail($token));
+                });
+        } catch (\Exception $e) {
+            Log::info(
+                'Failed to send OTP to this email',
+                ['email' => $this->email, 'message' => $e->getMessage()]
+            );
+        }
+    }
+
+    /**
+     * Get the one time token password for this user
+     *
+     * @return HasMany
+     */
+    public function otptokens(): HasMany
+    {
+        return $this->hasMany(OtpToken::class, 'user_id');
     }
 }
