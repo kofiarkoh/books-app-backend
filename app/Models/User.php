@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Notifications\User\Auth\ResetPassword;
 use App\Notifications\User\Auth\VerifyEmail;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -119,5 +120,15 @@ class User extends Authenticatable
     public function otptokens(): HasMany
     {
         return $this->hasMany(OtpToken::class, 'user_id');
+    }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param string $token
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new ResetPassword($token));
     }
 }
