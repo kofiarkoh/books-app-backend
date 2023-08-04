@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\User\Auth\LoginController;
+use App\Http\Controllers\Api\User\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Api\User\Auth\RegisterUserController;
 use App\Http\Controllers\Api\User\Auth\VerifyEmailController;
 use App\Http\Controllers\BookController;
@@ -23,6 +24,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('auth/register', RegisterUserController::class);
 
 Route::post('auth/login', LoginController::class);
+
+Route::post('auth/forgot-password', [PasswordResetLinkController::class, 'sendResetLink']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('auth/register/verify-email', VerifyEmailController::class);
