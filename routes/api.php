@@ -26,6 +26,8 @@ Route::post('auth/register', RegisterUserController::class);
 Route::post('auth/login', LoginController::class);
 
 Route::post('auth/forgot-password', [PasswordResetLinkController::class, 'sendResetLink']);
+Route::post('auth/forgot-password/verify-token', [PasswordResetLinkController::class, 'verifyResetToken']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('auth/register/verify-email', VerifyEmailController::class);

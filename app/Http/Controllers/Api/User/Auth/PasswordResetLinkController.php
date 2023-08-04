@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\User\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\PasswordResetTokenVerifyRequest;
 use App\Http\Requests\User\ForgotPasswordRequest;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
 
@@ -31,5 +33,23 @@ class PasswordResetLinkController extends Controller
         return response()->json([
             'message' => __($status)
         ]);
+    }
+
+
+    public function verifyResetToken(PasswordResetTokenVerifyRequest $request)
+    {
+
+        /** @var User $user */
+        $user = $request->userFromEmail();
+
+        if (!Password::tokenExists($user, $request->validated('token'))) {
+            throw ValidationException::withMessages(([
+                'token' => __(Password::INVALID_TOKEN)
+            ]));
+        }
+
+        return response()->json([
+            'message' => 'Forgot password token verified successfully'
+        ], Response::HTTP_OK);
     }
 }
