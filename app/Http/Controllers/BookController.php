@@ -26,7 +26,9 @@ class BookController extends Controller
         $user = auth()->user();
 
         $paginated = QueryBuilder::for(Book::class)
-            ->allowedFilters([AllowedFilter::custom('q', new MultiFieldSearchFilter, 'title,description,author_name')])->where('user_id', $user->id)
+            ->allowedFilters([AllowedFilter::custom('q', new MultiFieldSearchFilter, 'title,description,author_name')])
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'DESC')
             ->paginate();
 
         $res =  fractal()->collection($paginated, new BookTransformer)->serializeWith(new SerializerArraySerializer())
