@@ -36,7 +36,7 @@ The APIs are defined insided `routes/api.php`.
 - api endpoints can accessed via `http//yourdomain/api`
 
 
-- For live deployment you may have to update the following server environment variables for email otp to work.
+- For live deployment you may have to update the following server environment variables with appropriate mail server credentials for email otp to work.
 ```
 MAIL_MAILER=smtp
 MAIL_HOST=mailpit
