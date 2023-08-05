@@ -1,4 +1,4 @@
-FROM richarvey/nginx-php-fpm:1.9.1
+FROM richarvey/nginx-php-fpm:3.1.6
 
 COPY . .
 
@@ -10,9 +10,11 @@ ENV RUN_SCRIPTS 1
 ENV REAL_IP_HEADER 1
 
 # Laravel config
-ENV APP_ENV production
+ENV APP_ENV local
 ENV APP_DEBUG false
 ENV LOG_CHANNEL stderr
+
+
 
 # Allow composer to run as root
 ENV COMPOSER_ALLOW_SUPERUSER 1
